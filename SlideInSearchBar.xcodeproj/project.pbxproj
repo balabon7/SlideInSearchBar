@@ -13,6 +13,8 @@
 		1D46C6A92C28D4A4004601B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D46C6A72C28D4A4004601B7 /* Main.storyboard */; };
 		1D46C6AB2C28D4A7004601B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D46C6AA2C28D4A7004601B7 /* Assets.xcassets */; };
 		1D46C6AE2C28D4A7004601B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D46C6AC2C28D4A7004601B7 /* LaunchScreen.storyboard */; };
+		1D46C6B62C28D4C7004601B7 /* SlideInSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D46C6B52C28D4C7004601B7 /* SlideInSearchBar.swift */; };
+		1D46C6B82C28D52A004601B7 /* TestingSearchBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D46C6B72C28D52A004601B7 /* TestingSearchBarViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		1D46C6AA2C28D4A7004601B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1D46C6AD2C28D4A7004601B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1D46C6AF2C28D4A7004601B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1D46C6B52C28D4C7004601B7 /* SlideInSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideInSearchBar.swift; sourceTree = "<group>"; };
+		1D46C6B72C28D52A004601B7 /* TestingSearchBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingSearchBarViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +63,8 @@
 				1D46C6A12C28D4A4004601B7 /* AppDelegate.swift */,
 				1D46C6A32C28D4A4004601B7 /* SceneDelegate.swift */,
 				1D46C6A52C28D4A4004601B7 /* ViewController.swift */,
+				1D46C6B52C28D4C7004601B7 /* SlideInSearchBar.swift */,
+				1D46C6B72C28D52A004601B7 /* TestingSearchBarViewController.swift */,
 				1D46C6A72C28D4A4004601B7 /* Main.storyboard */,
 				1D46C6AA2C28D4A7004601B7 /* Assets.xcassets */,
 				1D46C6AC2C28D4A7004601B7 /* LaunchScreen.storyboard */,
@@ -138,6 +144,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D46C6B62C28D4C7004601B7 /* SlideInSearchBar.swift in Sources */,
+				1D46C6B82C28D52A004601B7 /* TestingSearchBarViewController.swift in Sources */,
 				1D46C6A62C28D4A4004601B7 /* ViewController.swift in Sources */,
 				1D46C6A22C28D4A4004601B7 /* AppDelegate.swift in Sources */,
 				1D46C6A42C28D4A4004601B7 /* SceneDelegate.swift in Sources */,
