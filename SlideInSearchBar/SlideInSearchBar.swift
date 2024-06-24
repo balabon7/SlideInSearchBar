@@ -10,10 +10,13 @@ import UIKit
 // Custom search bar class
 public class SlideInSearchBar: UIView, UITextFieldDelegate {
     
+    private var animationDuration: TimeInterval = 0.3
+    
     // Placeholder elements
     private let iconView: UIImageView
     private let placeholderLabel: UILabel
     private let clearButton: UIButton
+    private let cancelButton: UIButton
     
     // Text field
     private let textField: UITextField
@@ -35,6 +38,7 @@ public class SlideInSearchBar: UIView, UITextFieldDelegate {
         self.textField = UITextField()
         self.backgroundView = UIView()
         self.clearButton = UIButton(type: .system)
+        self.cancelButton = UIButton(type: .system)
         
         super.init(frame: frame)
         
@@ -49,13 +53,11 @@ public class SlideInSearchBar: UIView, UITextFieldDelegate {
         // Setup background view
         self.backgroundView.backgroundColor = .systemGray6
         self.backgroundView.layer.cornerRadius = 16
-        // self.backgroundView.layer.borderWidth = 1
-        // self.backgroundView.layer.borderColor = UIColor.lightGray.cgColor
         self.backgroundView.layer.masksToBounds = true
         
         // Setup placeholder label
         self.placeholderLabel.textColor = .lightGray
-        self.placeholderLabel.font = UIFont.systemFont(ofSize: 17)
+        self.placeholderLabel.font = UIFont.systemFont(ofSize: 19)
         
         // Setup icon view
         self.iconView.tintColor = .lightGray
@@ -65,13 +67,19 @@ public class SlideInSearchBar: UIView, UITextFieldDelegate {
         self.textField.delegate = self
         self.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         self.textField.backgroundColor = .clear
-        // self.textField.borderStyle = .none
         
         // Setup clear button
         self.clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
         self.clearButton.tintColor = .gray
         self.clearButton.isHidden = true
         self.clearButton.addTarget(self, action: #selector(clearButtonTapped), for: .touchUpInside)
+        
+        // Setup cancel button
+        self.cancelButton.setTitle("Cancel", for: .normal)
+        self.cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        self.cancelButton.tintColor = .systemBlue
+        self.cancelButton.alpha = 0.0 // Initially hidden
+        self.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         
         // Add tap gesture to the placeholder
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -83,6 +91,7 @@ public class SlideInSearchBar: UIView, UITextFieldDelegate {
         self.addSubview(self.placeholderLabel)
         self.addSubview(self.textField)
         self.addSubview(self.clearButton)
+        self.addSubview(self.cancelButton)
         
         // Add Done button to keyboard
         addDoneButtonOnKeyboard()
@@ -111,11 +120,26 @@ public class SlideInSearchBar: UIView, UITextFieldDelegate {
         self.updatePlaceholderVisibility()
     }
     
+    @objc private func cancelButtonTapped() {
+        self.textField.resignFirstResponder()
+        self.textField.text = ""
+        self.isEditingText = false
+        self.updatePlaceholderVisibility()
+        UIView.animate(withDuration: animationDuration) {
+            self.cancelButton.alpha = 0.0
+            self.cancelButton.frame.origin.x = self.bounds.width // Move outside the view
+            self.layoutSubviews()
+        }
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
         
         // Layout the background view
-        self.backgroundView.frame = self.bounds
+        let cancelButtonSize = self.cancelButton.sizeThatFits(self.bounds.size)
+        let offset = self.isEditingText ? cancelButtonSize.width + 18 : 0 // Padding between cancelButton and backgroundView
+        
+        self.backgroundView.frame = CGRect(x: 0, y: 0, width: self.bounds.width - offset, height: self.bounds.height)
         
         // Center the placeholder elements when not editing
         if !self.isEditingText {
@@ -143,19 +167,32 @@ public class SlideInSearchBar: UIView, UITextFieldDelegate {
             let labelSize = self.placeholderLabel.sizeThatFits(self.bounds.size)
             self.placeholderLabel.frame = CGRect(x: self.iconView.frame.maxX + 8,
                                                  y: (self.bounds.height - labelSize.height) / 2,
-                                                 width: min(labelSize.width, self.bounds.width - 50 - iconSize.width),
+                                                 width: min(labelSize.width, self.bounds.width - 50 - iconSize.width - offset),
                                                  height: labelSize.height)
         }
         
         // Layout the text field with padding
-        self.textField.frame = CGRect(x: self.iconView.frame.maxX + 8, y: 0, width: self.bounds.width - self.iconView.frame.maxX - 52, height: self.bounds.height)
+        self.textField.frame = CGRect(x: self.iconView.frame.maxX + 8, y: 0, width: self.bounds.width - self.iconView.frame.maxX - 52 - offset, height: self.bounds.height)
         
         // Layout the clear button
         let buttonSize: CGFloat = 20
-        self.clearButton.frame = CGRect(x: self.bounds.width - buttonSize - 16,
+        self.clearButton.frame = CGRect(x: self.bounds.width - buttonSize - 16 - offset,
                                         y: (self.bounds.height - buttonSize) / 2,
                                         width: buttonSize,
                                         height: buttonSize)
+        
+        // Layout the cancel button
+        if !self.isEditingText {
+            self.cancelButton.frame = CGRect(x: self.bounds.width, // Initially outside the view
+                                             y: (self.bounds.height - cancelButtonSize.height) / 2,
+                                             width: cancelButtonSize.width,
+                                             height: cancelButtonSize.height)
+        } else {
+            self.cancelButton.frame = CGRect(x: self.bounds.width - cancelButtonSize.width - 2, // 2 points for margin
+                                             y: (self.bounds.height - cancelButtonSize.height) / 2,
+                                             width: cancelButtonSize.width,
+                                             height: cancelButtonSize.height)
+        }
     }
     
     @objc private func handleTap() {
@@ -175,7 +212,9 @@ public class SlideInSearchBar: UIView, UITextFieldDelegate {
     
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         self.isEditingText = true
-        UIView.animate(withDuration: 0.25) {
+        UIView.animate(withDuration: animationDuration) {
+            self.cancelButton.alpha = 1.0
+            self.cancelButton.frame.origin.x = self.bounds.width - self.cancelButton.frame.width
             self.layoutSubviews()
         }
     }
@@ -185,7 +224,11 @@ public class SlideInSearchBar: UIView, UITextFieldDelegate {
         if isEmpty {
             self.isEditingText = false
         }
-        UIView.animate(withDuration: 0.25) {
+        UIView.animate(withDuration: animationDuration) {
+            if isEmpty {
+                self.cancelButton.alpha = 0.0
+                self.cancelButton.frame.origin.x = self.bounds.width // Move outside the view
+            }
             self.updatePlaceholderVisibility()
             self.layoutSubviews()
         }

@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         self.searchBar = SlideInSearchBar()
         
         // Set placeholder text
-        self.searchBar.placeholderText = "Search"
+        self.searchBar.placeholderText = "App Library"
         
         // Set the frame of the search bar with left and right padding of 25 points
         self.searchBar.frame = CGRect(x: 25, y: 100, width: self.view.bounds.width - 50, height: 46)
